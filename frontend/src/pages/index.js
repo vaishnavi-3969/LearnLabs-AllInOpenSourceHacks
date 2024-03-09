@@ -2,7 +2,7 @@ import Home from "./Home";
 import Landing from "./Landing";
 import NotFound from "./NotFound";
 import Profile from "./Profile";
-import FlashCardsGenderator from "./FlashCardsGenderator";
+import FlashCardsGenerator from "./FlashCardsGenerator";
 import TakeNotes from "./TakeNotes";
 import NotesFormatter from "./NotesFormatter";
 import PracticeQuestionsGenerator from "./PracticeQuestionsGenerator";
@@ -12,7 +12,7 @@ export {
     Landing,
     NotFound,
     Profile,
-    FlashCardsGenderator,
+    FlashCardsGenerator,
     TakeNotes,
     NotesFormatter,
     PracticeQuestionsGenerator
