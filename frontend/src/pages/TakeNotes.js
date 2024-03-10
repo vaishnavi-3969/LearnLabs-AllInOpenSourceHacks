@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
+import { useAuth0 } from '@auth0/auth0-react';
 
 const TakeNotes = () => {
   const [notes, setNotes] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [isTakingNotes, setIsTakingNotes] = useState(false);
   const [previewNoteIndex, setPreviewNoteIndex] = useState(null);
-
-  const handleEditorChange = (content) => {
-    setInputValue(content);
-  };
+  const {user} = useAuth0();
 
   const handleTakeNotes = () => {
     setIsTakingNotes(true);
@@ -41,22 +39,19 @@ const TakeNotes = () => {
       {isTakingNotes && (
         <>
           <Editor
-            apiKey="7sv28nl1nulkab1v8uyi89tee6axs5wt906zjyjkv9gh6rao" 
-            value={inputValue}
+            apiKey='7sv28nl1nulkab1v8uyi89tee6axs5wt906zjyjkv9gh6rao'
             init={{
-              height: 500, 
-              menubar: false,
-              plugins: [
-                'advlist autolink lists link image charmap print preview anchor',
-                'searchreplace visualblocks code fullscreen',
-                'insertdatetime media table paste code help wordcount'
+              plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage advtemplate ai mentions tinycomments tableofcontents footnotes mergetags autocorrect typography inlinecss',
+              toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+              tinycomments_mode: 'embedded',
+              tinycomments_author: 'Author name',
+              mergetags_list: [
+                { value: user.name, title: 'Name' },
+                { value:user.email, title: 'Email' },
               ],
-              toolbar:
-                'undo redo | formatselect | bold italic backcolor | \
-                alignleft aligncenter alignright alignjustify | \
-                bullist numlist outdent indent | removeformat | help'
+              ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
             }}
-            onEditorChange={handleEditorChange}
+            initialValue="<h1>Notes on</h1>"
           />
           <div className="flex justify-between mt-4">
             <button
