@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { database } from '../components/Firebase';
-import { ref, push, onValue, remove } from 'firebase/database';
+import { ref, push, onValue, remove, set } from 'firebase/database';
 
 const TakeNotes = () => {
   const { user } = useAuth0();
@@ -67,8 +67,30 @@ const TakeNotes = () => {
 
   const handleDeleteNote = (index) => {
     const noteToDelete = notes[index];
-    const notesRef = ref(database, `notes/${user.sub}`);
-    remove(ref(notesRef, noteToDelete.id)); // Assuming each note has an "id" field
+    const notesRef = ref(database, `notes/${user.sub}/${noteToDelete.id}`); // Assuming each note has an "id" field
+    remove(notesRef);
+  };
+
+  const handleSaveEditNote = () => {
+    if (inputValue.trim() !== '') {
+      const updatedNote = {
+        ...notes[editNoteIndex],
+        title: title || 'Untitled',
+        content: inputValue,
+        tags: tags.split(',').map(tag => tag.trim()),
+        date: new Date().toDateString(),
+        timestamp: new Date().getTime(),
+      };
+
+      const notesRef = ref(database, `notes/${user.sub}/${updatedNote.id}`);
+      set(notesRef, updatedNote);
+
+      setInputValue('');
+      setTitle('');
+      setTags('');
+      setIsTakingNotes(false);
+      setEditNoteIndex(null);
+    }
   };
 
   return (
@@ -116,7 +138,7 @@ const TakeNotes = () => {
           <div className="flex justify-between mt-4">
             <button
               className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-              onClick={handleSaveNote}
+              onClick={editNoteIndex !== null ? handleSaveEditNote : handleSaveNote}
             >
               {editNoteIndex !== null ? 'Save Changes' : 'Save Note'}
             </button>
