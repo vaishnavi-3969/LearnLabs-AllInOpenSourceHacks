@@ -1,0 +1,4 @@
+# run `pip install --upgrade -r requirements.txt` in terminal to install following dependencies
+Django
+django-cors-headers
+openai

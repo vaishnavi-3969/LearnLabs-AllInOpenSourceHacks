@@ -1,8 +1,56 @@
+import json
+from openai import OpenAI
+import os
+
+
 class LearnLabsAI:
+    # SYSTEM_MESSAGE_TEMPLATE = """You are an AI agent part of an educational AI app aimed to make studying easier for students and teaching easier for teachers.
+    # There are various tasks that you can perform for example generating question and answers for a topic and formatting notes. You will be asked to perform
+    # one of those tasks at a time, with detailed informationa about required input and output. Follow instructions carefully and don't reply with anything extra."""
+    SYSTEM_MESSAGE_TEMPLATE = """You are an AI agent part of an educational AI app aimed to make studying easier for students and teaching easier for teachers.
+    Your task is to `{task_description}`. Following are the intructions for the task: `{task_instructions}`"""
+
+    @staticmethod
+    def get_open_ai_response(system_message, user_message):
+        client = OpenAI(
+          api_key="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",
+        )
+
+        completion = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": system_message},
+                {"role": "user", "content": user_message}
+            ]
+        )
+
+        print(completion.choices[0].message.content)
+
+
     @staticmethod
     def generate_flashcards(topic):
+        
+        # # setup inputs for AI model
+        # task_description = "generate content for flashcards for a given topic. Each flashcard has a front and a back. Front part is a prompt, a keyword, a word to define, etc.\
+        # Back part is corresponding answer. Content of front should be as brief as possible, if possible use one word, if not then as few words as possible.\
+        # Generate exactly 20 flashcards for the given topic. Make it so the flashcards cover the topic well enough to give a good high level understanding."
+        # task_instructions = "Input: topic name. Output: 20 JSON Formatted flashcards in a JSON list. Each of the flashcard in the list is a JSON dictionary with 2 keys: front and back.\
+        # The values of front and back should be content for front end back respectively. Only give output the JSON formatted 20 flashcards content."
+        # system_message = LearnLabsAI.SYSTEM_MESSAGE_TEMPLATE.format(task_description=task_description, task_instructions=task_instructions)
+        
+        # user_message = f"Topic to generate 20 flashcards in JSON format: `{topic}`"
 
-        # TODO: generate flashcards by AI
+        # # fetch and parse response
+        # response = LearnLabsAI.get_open_ai_response(system_message, user_message)
+        # try:
+        #     response = "[" + response.strip("[")
+        #     response = response.strip("]") + "]"
+        #     flashcards = json.loads(response)
+        # except:
+        #     flashcards = []
+        
+        # return flashcards
+
         flashcards = [
             {"front": "Black Box Testing", "back": "A method of software testing that examines the functionality of an application without peering into its internal structures or workings."},
             {"front": "White Box Testing", "back": "A form of application testing that provides the tester with complete knowledge of the application being tested, including access to source code and design documents."},
@@ -55,3 +103,6 @@ class LearnLabsAI:
             {"question": "Explain the concept of System Testing.", "answer": "The process of testing an integrated system to verify that it meets specified requirements."}
         ]
         return questions_and_answers
+
+
+# LearnLabsAI.generate_flashcards("Introduction to large language models")
