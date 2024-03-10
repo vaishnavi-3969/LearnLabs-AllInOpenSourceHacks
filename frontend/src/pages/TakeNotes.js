@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { database } from '../components/Firebase';
-import { ref, push, onValue } from 'firebase/database';
+import { ref, push, onValue, remove } from 'firebase/database';
 
 const TakeNotes = () => {
   const { user } = useAuth0();
@@ -65,6 +65,12 @@ const TakeNotes = () => {
     setPreviewNote(notes[index]);
   };
 
+  const handleDeleteNote = (index) => {
+    const noteToDelete = notes[index];
+    const notesRef = ref(database, `notes/${user.sub}`);
+    remove(ref(notesRef, noteToDelete.id)); // Assuming each note has an "id" field
+  };
+
   return (
     <div className="min-w-md mx-auto mt-8 p-4 border rounded-lg">
       <h2 className="text-xl font-semibold mb-4">Note Taking</h2>
@@ -93,9 +99,19 @@ const TakeNotes = () => {
             className="border rounded-md p-2 mb-2"
           />
           <Editor
-            value={inputValue}
-            onEditorChange={setInputValue}
-            // Editor configurations...
+            apiKey='7sv28nl1nulkab1v8uyi89tee6axs5wt906zjyjkv9gh6rao'
+            init={{
+              plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage advtemplate ai mentions tinycomments tableofcontents footnotes mergetags autocorrect typography inlinecss',
+              toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+              tinycomments_mode: 'embedded',
+              tinycomments_author: 'Author name',
+              mergetags_list: [
+                { value: 'First.Name', title: 'First Name' },
+                { value: 'Email', title: 'Email' },
+              ],
+              ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
+            }}
+            initialValue="Welcome to TinyMCE!"
           />
           <div className="flex justify-between mt-4">
             <button
@@ -127,10 +143,10 @@ const TakeNotes = () => {
           <div className="text-gray-500 text-sm">Tags: {note.tags.join(', ')}</div>
           {previewNote && previewNote.timestamp === note.timestamp && (
             <div>
-            <div dangerouslySetInnerHTML={{ __html: note.content }} />
+              <div dangerouslySetInnerHTML={{ __html: note.content }} />
               <div className="text-gray-500 text-sm">Date: {note.date}</div>
-              {/* <div className="text-gray-500 text-sm">Timestamp: {note.timestamp}</div> */}
               <button className="text-blue-500 hover:underline" onClick={() => handleEditNote(index)}>Edit</button>
+              <button className="text-red-500 hover:underline" onClick={() => handleDeleteNote(index)}>Delete</button>
             </div>
           )}
         </div>
