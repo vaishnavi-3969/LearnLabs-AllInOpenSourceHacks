@@ -30,4 +30,6 @@ To run this application locally, follow these steps:
 7. Access the application at `http://localhost:3000`.
 
 ## Contributors
-- [Mudassir Fayaz](https://github.com/Fayaz-khani) - An AI and Web developer with high interest in LLM
+- [Mudassir Fayaz](https://www.linkedin.com/in/mudassir-fayaz-8a7697204) - I am an AI and Web developer with high interest in LLM
+- [Sohaib Ahmed Abbasi](https://www.linkedin.com/in/sohaibahmedabbasi) - I am an AI and ML engineer.
+- [Vaishnavi Kale](https://www.linkedin.com/in/vaishnavi-kale-111543204) I am a tech enthusiast and I love connecting with like-minded individuals
