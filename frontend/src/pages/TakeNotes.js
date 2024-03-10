@@ -120,19 +120,21 @@ const TakeNotes = () => {
         </>
       )}
       {notes.map((note, index) => (
-        <div key={index} className="border rounded-md p-2 mb-2 cursor-pointer" onClick={() => handlePreviewNote(index)}>
-          <div className="font-semibold">{note.title || 'Untitled'}</div>
-          <div>{note.content}</div>
+        <div key={index} className="border rounded-md p-2 mb-2 cursor-pointer">
+          <div className="font-semibold" onClick={() => handlePreviewNote(index)}>
+            {note.title || 'Untitled'}
+          </div>
           <div className="text-gray-500 text-sm">Tags: {note.tags.join(', ')}</div>
+          {previewNote && previewNote.timestamp === note.timestamp && (
+            <div>
+            <div dangerouslySetInnerHTML={{ __html: note.content }} />
+              <div className="text-gray-500 text-sm">Date: {note.date}</div>
+              {/* <div className="text-gray-500 text-sm">Timestamp: {note.timestamp}</div> */}
+              <button className="text-blue-500 hover:underline" onClick={() => handleEditNote(index)}>Edit</button>
+            </div>
+          )}
         </div>
       ))}
-      {previewNote && (
-        <div className="mt-4 border rounded-md p-2">
-          <h3 className="font-semibold">{previewNote.title || 'Untitled'}</h3>
-          <div dangerouslySetInnerHTML={{ __html: previewNote.content }} />
-          <div className="text-gray-500 text-sm">Tags: {previewNote.tags.join(', ')}</div>
-        </div>
-      )}
     </div>
   );
 };
