@@ -57,6 +57,7 @@ const FlashcardGenerator = () => {
             <div className="text-gray-600">{flashcard.answer}</div>
           </motion.div>
         ))}
+        
       </div>
     </div>
   );
