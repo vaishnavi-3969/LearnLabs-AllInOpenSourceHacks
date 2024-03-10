@@ -31,5 +31,5 @@ To run this application locally, follow these steps:
 
 ## Contributors
 - [Mudassir Fayaz](https://www.linkedin.com/in/mudassir-fayaz-8a7697204) - I am an AI and Web developer with high interest in LLM
-- [Sohaib Ahmed Abbasi](https://www.linkedin.com/in/sohaibahmedabbasi) - I am an AI and ML engineer.
+- [Sohaib Ahmed Abbasi](https://www.linkedin.com/in/sohaibahmedabbasi) - I am a recently graduated software engineer who loves to solve problems and create impactful solutions. 
 - [Vaishnavi Kale](https://www.linkedin.com/in/vaishnavi-kale-111543204) I am a tech enthusiast and I love connecting with like-minded individuals
