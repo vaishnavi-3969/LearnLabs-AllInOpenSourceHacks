@@ -4,7 +4,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import {FaUser} from 'react-icons/fa';
 
 const Navbar = () => {
-    const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
+    const { isAuthenticated, loginWithRedirect, logout, user } = useAuth0();
 
     return (
         <nav className="bg-gray-800 p-4">
@@ -18,7 +18,7 @@ const Navbar = () => {
                         <Link to="/flashcards" className="text-white hover:text-gray-300">Flashcards</Link>
                         <Link to="/take-notes" className="text-white hover:text-gray-300">Take Notes</Link>
                         <Link to="/practice" className="text-white hover:text-gray-300">Practice</Link>
-                        <Link to="/profile" className="text-white hover:text-gray-300"><FaUser/></Link>
+                        <Link to="/profile"><img className='rounded-lg w-10' src={user.picture} alt={user.name}/></Link>
                         {isAuthenticated ? (
                             <button
                                 onClick={() => logout({ returnTo: window.location.origin })}

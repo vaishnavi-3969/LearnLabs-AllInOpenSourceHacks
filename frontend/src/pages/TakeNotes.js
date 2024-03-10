@@ -7,18 +7,36 @@ const TakeNotes = () => {
   const [inputValue, setInputValue] = useState('');
   const [isTakingNotes, setIsTakingNotes] = useState(false);
   const [previewNoteIndex, setPreviewNoteIndex] = useState(null);
-  const {user} = useAuth0();
+  const { user } = useAuth0();
+  const [editNoteIndex, setEditNoteIndex] = useState(null);
 
   const handleTakeNotes = () => {
+    setInputValue('');
     setIsTakingNotes(true);
+    setEditNoteIndex(null);
   };
 
   const handleSaveNote = () => {
     if (inputValue.trim() !== '') {
-      setNotes([...notes, inputValue]);
+      if (editNoteIndex !== null) {
+        // If editing existing note
+        const updatedNotes = [...notes];
+        updatedNotes[editNoteIndex] = inputValue;
+        setNotes(updatedNotes);
+        setEditNoteIndex(null);
+      } else {
+        // If adding new note
+        setNotes([...notes, inputValue]);
+      }
       setInputValue('');
       setIsTakingNotes(false);
     }
+  };
+
+  const handleEditNote = (index) => {
+    setInputValue(notes[index]);
+    setIsTakingNotes(true);
+    setEditNoteIndex(index);
   };
 
   const handlePreviewNote = (index) => {
@@ -40,6 +58,7 @@ const TakeNotes = () => {
         <>
           <Editor
             apiKey='7sv28nl1nulkab1v8uyi89tee6axs5wt906zjyjkv9gh6rao'
+            value={inputValue}
             init={{
               plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage advtemplate ai mentions tinycomments tableofcontents footnotes mergetags autocorrect typography inlinecss',
               toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
@@ -51,18 +70,22 @@ const TakeNotes = () => {
               ],
               ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
             }}
-            initialValue="<h1>Notes on</h1>"
+            onEditorChange={setInputValue}
           />
           <div className="flex justify-between mt-4">
             <button
               className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
               onClick={handleSaveNote}
             >
-              Save Note
+              {editNoteIndex !== null ? 'Save Changes' : 'Save Note'}
             </button>
             <button
               className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
-              onClick={() => setIsTakingNotes(false)}
+              onClick={() => {
+                setInputValue('');
+                setIsTakingNotes(false);
+                setEditNoteIndex(null);
+              }}
             >
               Cancel
             </button>
@@ -72,6 +95,12 @@ const TakeNotes = () => {
       {notes.map((note, index) => (
         <div key={index} className="border rounded-md p-2 mb-2 cursor-pointer" onClick={() => handlePreviewNote(index)}>
           Note {index + 1}
+          <span
+            className="ml-2 text-sm text-blue-500 cursor-pointer"
+            onClick={() => handleEditNote(index)}
+          >
+            (Edit)
+          </span>
         </div>
       ))}
       {previewNoteIndex !== null && (
