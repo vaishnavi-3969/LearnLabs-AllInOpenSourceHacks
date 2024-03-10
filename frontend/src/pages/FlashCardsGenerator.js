@@ -22,6 +22,7 @@ const FlashcardGenerator = () => {
   const [flashcards, setFlashcards] = useState(dummyData.result.flashcards);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showBack, setShowBack] = useState(false);
+  const [showFlashcards, setShowFlashcards] = useState(false);
 
   const handleFlipCard = () => {
     setShowBack(!showBack);
@@ -34,11 +35,15 @@ const FlashcardGenerator = () => {
 
   const currentFlashcard = flashcards[currentIndex];
 
+  const handleShowFlashcards = () => {
+    setShowFlashcards(true);
+  };
+
   return (
     <div className="w-full flex flex-col items-center justify-center h-screen overflow-hidden">
       <h2 className="text-3xl font-bold mb-6">Flashcard Generator</h2>
-      <AnimatePresence>
-        {currentFlashcard && (
+      {showFlashcards ? (
+        <AnimatePresence>
           <motion.div
             key={currentIndex}
             className="bg-white shadow-md rounded-md p-4 mt-4 cursor-pointer"
@@ -46,13 +51,17 @@ const FlashcardGenerator = () => {
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -50 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.5, delay: 0.5 }}            
           >
             <div className="font-bold text-lg mb-2">{showBack ? currentFlashcard.back : currentFlashcard.front}</div>
             {!showBack && <div className="text-gray-600">Click to flip</div>}
           </motion.div>
-        )}
-      </AnimatePresence>
+        </AnimatePresence>
+      ) : (
+        <button onClick={handleShowFlashcards} className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 mb-4">
+          Generate Flashcards
+        </button>
+      )}
       <button
         onClick={handleNextCard}
         className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 mt-4"
