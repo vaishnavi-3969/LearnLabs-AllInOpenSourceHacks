@@ -1,7 +1,7 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { FlashCardsGenerator, Home, Landing, NotFound, Profile, TakeNotes } from './pages';
+import { FlashCardsGenerator, Home, Landing, NotFound, PracticeQuestionsGenerator, Profile, TakeNotes } from './pages';
 import { Footer, Navbar } from './components';
 
 function App() {
@@ -20,6 +20,8 @@ function App() {
               <Route path='/take-notes' element=<TakeNotes/>/>
               <Route path='/profile' element=<Profile/>/>
               <Route path='/flash-cards-generator' element=<FlashCardsGenerator/>/>
+              <Route path='/practice' element=<PracticeQuestionsGenerator/>/>
+
             </>
           ) : (
             <>
