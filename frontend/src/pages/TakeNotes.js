@@ -1,14 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import { useAuth0 } from '@auth0/auth0-react';
+import { database } from '../components/Firebase';
+import { ref, push, onValue } from 'firebase/database';
 
 const TakeNotes = () => {
+  const { user } = useAuth0();
   const [notes, setNotes] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [isTakingNotes, setIsTakingNotes] = useState(false);
   const [previewNoteIndex, setPreviewNoteIndex] = useState(null);
-  const { user } = useAuth0();
   const [editNoteIndex, setEditNoteIndex] = useState(null);
+
+  useEffect(() => {
+    // Fetch notes from Firebase on component mount
+    const notesRef = ref(database, `notes/${user.sub}`);
+    onValue(notesRef, (snapshot) => {
+      const notesData = snapshot.val();
+      if (notesData) {
+        setNotes(Object.values(notesData));
+      } else {
+        setNotes([]);
+      }
+    });
+
+    // Clean up database listener on component unmount
+    return () => {
+      // Turn off the listener
+    };
+  }, [user.sub]);
 
   const handleTakeNotes = () => {
     setInputValue('');
@@ -18,23 +38,23 @@ const TakeNotes = () => {
 
   const handleSaveNote = () => {
     if (inputValue.trim() !== '') {
-      if (editNoteIndex !== null) {
-        // If editing existing note
-        const updatedNotes = [...notes];
-        updatedNotes[editNoteIndex] = inputValue;
-        setNotes(updatedNotes);
-        setEditNoteIndex(null);
-      } else {
-        // If adding new note
-        setNotes([...notes, inputValue]);
-      }
+      const newNote = {
+        title: 'Your Note Title',
+        content: inputValue,
+        subject: 'Your Note Subject',
+        tags: ['tag1', 'tag2'], // Add your tags here
+      };
+
+      const notesRef = ref(database, `notes/${user.sub}`);
+      push(notesRef, newNote);
+
       setInputValue('');
       setIsTakingNotes(false);
     }
   };
 
   const handleEditNote = (index) => {
-    setInputValue(notes[index]);
+    setInputValue(notes[index].content);
     setIsTakingNotes(true);
     setEditNoteIndex(index);
   };
@@ -42,7 +62,6 @@ const TakeNotes = () => {
   const handlePreviewNote = (index) => {
     setPreviewNoteIndex(index);
   };
-
   return (
     <div className="min-w-md mx-auto mt-8 p-4 border rounded-lg">
       <h2 className="text-xl font-semibold mb-4">Note Taking</h2>
