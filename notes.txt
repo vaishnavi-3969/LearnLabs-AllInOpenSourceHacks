@@ -1,0 +1,26 @@
+Software Testing Overview:
+
+Software testing is an integral part of the software development lifecycle aimed at ensuring the quality, reliability, and functionality of a software application. It involves the systematic execution of various test cases, scenarios, and strategies to identify bugs, errors, and defects in the software.
+
+Types of Software Testing:
+
+Black Box Testing: Black box testing is a method where the internal structure and implementation details of the software are not known to the tester. It focuses on evaluating the functionality of the application without peering into its internal workings.
+
+White Box Testing: White box testing, also known as glass box testing, involves testing the internal structure, logic, and code of the software application. Testers have complete knowledge of the system, including access to source code and design documents.
+
+Unit Testing: Unit testing is a level of software testing where individual components or functions of a software application are tested in isolation. It aims to validate that each unit of the software performs as expected.
+
+Integration Testing: Integration testing is the phase in software testing where individual software modules are combined and tested as a group to ensure they work together as expected.
+
+System Testing: System testing is the process of testing an integrated system to verify that it meets specified requirements. It involves testing the entire system as a whole.
+
+Acceptance Testing: Acceptance testing is a type of testing conducted to determine whether the system satisfies the acceptance criteria and to enable the customer to decide whether to accept the system.
+
+Regression Testing: Regression testing is testing conducted to ensure that recent changes or updates to the software application have not adversely affected existing features.
+
+Load Testing: Load testing is the process of putting demand on a system and measuring its response. It helps ensure that a software application can handle the expected load without performance degradation.
+
+Usability Testing: Usability testing evaluates a product's user interface to ensure it is easy to use and meets the needs of the end-users.
+
+Security Testing: Security testing is a type of testing conducted to ensure that software systems and applications are secure and protected against vulnerabilities.
+
