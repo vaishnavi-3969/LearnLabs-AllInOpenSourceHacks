@@ -3,7 +3,7 @@ import { getDatabase } from "firebase/database";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: process.env.FIREBASE_API_KEY,
+  apiKey: 'AIzaSyCnpcwpaQ24NOXPG-vcPvl3thBlNJ2OIEM',
   authDomain: "learnlabs-2cc32.firebaseapp.com",
   projectId: "learnlabs-2cc32",
   storageBucket: "learnlabs-2cc32.appspot.com",
