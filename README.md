@@ -2,7 +2,7 @@
 LearnLabs is an AI-powered educational application designed to assist both students and teachers in their learning and teaching endeavors. With features like flashcards generation, notes formatting, and practice questions generation, LearnLabs aims to streamline the learning process and enhance educational outcomes.
 
 ## Tech stack
-<img src="https://skillicons.dev/icons?i=react,django,python,js,tailwind,git,github,js,vercel" />
+<img src="https://skillicons.dev/icons?i=react,django,python,go,js,tailwind,git,github,js,vercel" />
 
 ## Features
 
