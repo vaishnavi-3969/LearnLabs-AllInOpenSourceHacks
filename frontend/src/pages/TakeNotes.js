@@ -8,12 +8,13 @@ const TakeNotes = () => {
   const { user } = useAuth0();
   const [notes, setNotes] = useState([]);
   const [inputValue, setInputValue] = useState('');
+  const [title, setTitle] = useState('');
+  const [tags, setTags] = useState('');
   const [isTakingNotes, setIsTakingNotes] = useState(false);
-  const [previewNoteIndex, setPreviewNoteIndex] = useState(null);
+  const [previewNote, setPreviewNote] = useState(null);
   const [editNoteIndex, setEditNoteIndex] = useState(null);
 
   useEffect(() => {
-    // Fetch notes from Firebase on component mount
     const notesRef = ref(database, `notes/${user.sub}`);
     onValue(notesRef, (snapshot) => {
       const notesData = snapshot.val();
@@ -23,11 +24,6 @@ const TakeNotes = () => {
         setNotes([]);
       }
     });
-
-    // Clean up database listener on component unmount
-    return () => {
-      // Turn off the listener
-    };
   }, [user.sub]);
 
   const handleTakeNotes = () => {
@@ -39,29 +35,36 @@ const TakeNotes = () => {
   const handleSaveNote = () => {
     if (inputValue.trim() !== '') {
       const newNote = {
-        title: 'Your Note Title',
+        title: title || 'Untitled',
         content: inputValue,
         subject: 'Your Note Subject',
-        tags: ['tag1', 'tag2'], // Add your tags here
+        tags: tags.split(',').map(tag => tag.trim()),
+        date: new Date().toDateString(),
+        timestamp: new Date().getTime(),
       };
 
       const notesRef = ref(database, `notes/${user.sub}`);
       push(notesRef, newNote);
 
       setInputValue('');
+      setTitle('');
+      setTags('');
       setIsTakingNotes(false);
     }
   };
 
   const handleEditNote = (index) => {
     setInputValue(notes[index].content);
+    setTitle(notes[index].title);
+    setTags(notes[index].tags.join(', '));
     setIsTakingNotes(true);
     setEditNoteIndex(index);
   };
 
   const handlePreviewNote = (index) => {
-    setPreviewNoteIndex(index);
+    setPreviewNote(notes[index]);
   };
+
   return (
     <div className="min-w-md mx-auto mt-8 p-4 border rounded-lg">
       <h2 className="text-xl font-semibold mb-4">Note Taking</h2>
@@ -75,21 +78,24 @@ const TakeNotes = () => {
       )}
       {isTakingNotes && (
         <>
+          <input
+            type="text"
+            placeholder="Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="border rounded-md p-2 mb-2"
+          />
+          <input
+            type="text"
+            placeholder="Tags (comma separated)"
+            value={tags}
+            onChange={(e) => setTags(e.target.value)}
+            className="border rounded-md p-2 mb-2"
+          />
           <Editor
-            apiKey='7sv28nl1nulkab1v8uyi89tee6axs5wt906zjyjkv9gh6rao'
             value={inputValue}
-            init={{
-              plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage advtemplate ai mentions tinycomments tableofcontents footnotes mergetags autocorrect typography inlinecss',
-              toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
-              tinycomments_mode: 'embedded',
-              tinycomments_author: 'Author name',
-              mergetags_list: [
-                { value: user.name, title: 'Name' },
-                { value:user.email, title: 'Email' },
-              ],
-              ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
-            }}
             onEditorChange={setInputValue}
+            // Editor configurations...
           />
           <div className="flex justify-between mt-4">
             <button
@@ -102,6 +108,8 @@ const TakeNotes = () => {
               className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
               onClick={() => {
                 setInputValue('');
+                setTitle('');
+                setTags('');
                 setIsTakingNotes(false);
                 setEditNoteIndex(null);
               }}
@@ -113,18 +121,16 @@ const TakeNotes = () => {
       )}
       {notes.map((note, index) => (
         <div key={index} className="border rounded-md p-2 mb-2 cursor-pointer" onClick={() => handlePreviewNote(index)}>
-          Note {index + 1}
-          <span
-            className="ml-2 text-sm text-blue-500 cursor-pointer"
-            onClick={() => handleEditNote(index)}
-          >
-            (Edit)
-          </span>
+          <div className="font-semibold">{note.title || 'Untitled'}</div>
+          <div>{note.content}</div>
+          <div className="text-gray-500 text-sm">Tags: {note.tags.join(', ')}</div>
         </div>
       ))}
-      {previewNoteIndex !== null && (
+      {previewNote && (
         <div className="mt-4 border rounded-md p-2">
-          <div dangerouslySetInnerHTML={{ __html: notes[previewNoteIndex] }} />
+          <h3 className="font-semibold">{previewNote.title || 'Untitled'}</h3>
+          <div dangerouslySetInnerHTML={{ __html: previewNote.content }} />
+          <div className="text-gray-500 text-sm">Tags: {previewNote.tags.join(', ')}</div>
         </div>
       )}
     </div>
