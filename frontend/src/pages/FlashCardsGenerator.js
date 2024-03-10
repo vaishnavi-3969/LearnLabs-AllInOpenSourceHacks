@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const FlashcardGenerator = () => {
   const dummyData = {
@@ -37,18 +37,22 @@ const FlashcardGenerator = () => {
   return (
     <div className="w-full flex flex-col items-center justify-center h-screen overflow-hidden">
       <h2 className="text-3xl font-bold mb-6">Flashcard Generator</h2>
-      {currentFlashcard && (
-        <motion.div
-          className="bg-white shadow-md rounded-md p-4 mt-4 cursor-pointer"
-          onClick={handleFlipCard}
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <div className="font-bold text-lg mb-2">{showBack ? currentFlashcard.back : currentFlashcard.front}</div>
-          {!showBack && <div className="text-gray-600">Click to flip</div>}
-        </motion.div>
-      )}
+      <AnimatePresence>
+        {currentFlashcard && (
+          <motion.div
+            key={currentIndex}
+            className="bg-white shadow-md rounded-md p-4 mt-4 cursor-pointer"
+            onClick={handleFlipCard}
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="font-bold text-lg mb-2">{showBack ? currentFlashcard.back : currentFlashcard.front}</div>
+            {!showBack && <div className="text-gray-600">Click to flip</div>}
+          </motion.div>
+        )}
+      </AnimatePresence>
       <button
         onClick={handleNextCard}
         className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 mt-4"
