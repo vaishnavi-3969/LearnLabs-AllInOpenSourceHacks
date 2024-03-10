@@ -65,10 +65,14 @@ const TakeNotes = () => {
     setPreviewNote(notes[index]);
   };
 
+
   const handleDeleteNote = (index) => {
     const noteToDelete = notes[index];
-    const notesRef = ref(database, `notes/${user.sub}/${noteToDelete.id}`); // Assuming each note has an "id" field
-    remove(notesRef);
+    const noteId = noteToDelete.id; // Assuming each note has an "id" field
+    const noteRef = ref(database, `notes/${user.sub}/${noteId}`);
+    remove(noteRef)
+      .then(() => console.log('Note deleted successfully'))
+      .catch(error => console.error('Error deleting note:', error));
   };
 
   const handleSaveEditNote = () => {
@@ -82,14 +86,17 @@ const TakeNotes = () => {
         timestamp: new Date().getTime(),
       };
 
-      const notesRef = ref(database, `notes/${user.sub}/${updatedNote.id}`);
-      set(notesRef, updatedNote);
-
-      setInputValue('');
-      setTitle('');
-      setTags('');
-      setIsTakingNotes(false);
-      setEditNoteIndex(null);
+      const noteId = notes[editNoteIndex].id; // Assuming each note has an "id" field
+      const noteRef = ref(database, `notes/${user.sub}/${noteId}`);
+      set(noteRef, updatedNote)
+        .then(() => {
+          setInputValue('');
+          setTitle('');
+          setTags('');
+          setIsTakingNotes(false);
+          setEditNoteIndex(null);
+        })
+        .catch(error => console.error('Error updating note:', error));
     }
   };
 

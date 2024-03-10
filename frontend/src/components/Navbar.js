@@ -15,7 +15,7 @@ const Navbar = () => {
                     </div>
                     <div className="flex items-center space-x-4">
                         <Link to="/" className="text-white hover:text-gray-300">Home</Link>
-                        <Link to="/flashcards" className="text-white hover:text-gray-300">Flashcards</Link>
+                        <Link to="/flash-cards-generator" className="text-white hover:text-gray-300">Flashcards</Link>
                         <Link to="/take-notes" className="text-white hover:text-gray-300">Take Notes</Link>
                         <Link to="/practice" className="text-white hover:text-gray-300">Practice</Link>
                         <Link to="/profile"><img className='rounded-lg w-10' src={user.picture} alt={user.name}/></Link>
